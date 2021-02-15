@@ -62,7 +62,8 @@ class SpotifySdk {
       bool asRadio,
       String scope,
       String playerName = 'Spotify SDK',
-      String accessToken}) async {
+      String accessToken,
+      bool showAuthView = true}) async {
     try {
       return await _channel.invokeMethod(MethodNames.connectToSpotify, {
         ParamNames.clientId: clientId,
@@ -71,6 +72,7 @@ class SpotifySdk {
         ParamNames.accessToken: accessToken,
         ParamNames.scope: scope,
         ParamNames.asRadio: asRadio,
+        ParamNames.showAuthView: showAuthView,
       });
     } on Exception catch (e) {
       _logException(MethodNames.connectToSpotify, e);

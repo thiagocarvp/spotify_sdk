@@ -140,4 +140,7 @@ class ParamNames {
 
   /// param name for [repeatMode]
   static const String repeatMode = 'repeatMode';
+
+  /// param name for [showAuthView]
+  static const String showAuthView = 'showAuthView';
 }

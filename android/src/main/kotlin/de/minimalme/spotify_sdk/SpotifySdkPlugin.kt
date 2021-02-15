@@ -94,6 +94,7 @@ class SpotifySdkPlugin(private val registrar: Registrar) : MethodCallHandler, Pl
     private val paramTrackIndex = "trackIndex"
     private val paramRepeatMode = "repeatMode"
     private val paramShuffle = "shuffle"
+    private val paramShowAuthView = "showAuthView"
 
     private val errorConnecting = "errorConnecting"
     private val errorDisconnecting = "errorDisconnecting"
@@ -124,7 +125,7 @@ class SpotifySdkPlugin(private val registrar: Registrar) : MethodCallHandler, Pl
 
         when (call.method) {
             //connecting to spotify
-            methodConnectToSpotify -> connectToSpotify(call.argument(paramClientId), call.argument(paramRedirectUrl), result)
+            methodConnectToSpotify -> connectToSpotify(call.argument(paramClientId), call.argument(paramRedirectUrl), result, call.argument(paramShowAuthView) ?: true)
             methodGetAuthenticationToken -> getAuthenticationToken(call.argument(paramClientId), call.argument(paramRedirectUrl), call.argument(paramScope), result)
             methodDisconnectFromSpotify -> disconnectFromSpotify(result)
             //player api calls
@@ -157,14 +158,14 @@ class SpotifySdkPlugin(private val registrar: Registrar) : MethodCallHandler, Pl
     }
 
     //-- Method implementations
-    private fun connectToSpotify(clientId: String?, redirectUrl: String?, result: Result) {
+    private fun connectToSpotify(clientId: String?, redirectUrl: String?, result: Result, showAuthView: Boolean = true) {
 
         if (clientId.isNullOrBlank() || redirectUrl.isNullOrBlank()) {
             result.error(errorConnecting, "client id or redirectUrl are not set or have invalid format", "")
         } else {
             val connectionParams = ConnectionParams.Builder(clientId)
                     .setRedirectUri(redirectUrl)
-                    .showAuthView(true)
+                    .showAuthView(showAuthView)
                     .build()
             var replySubmitted = false
             SpotifyAppRemote.disconnect(spotifyAppRemote)
